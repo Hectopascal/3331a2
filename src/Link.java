@@ -13,6 +13,9 @@ public class Link {
 		this.end2 = end2;
 	}
 	
+	/**
+	 * Returns true if the node is connected to given end
+	 */
 	public boolean isConnectedTo(String end) {
 		return (end == end1 || end == end2);
 	}
@@ -31,6 +34,14 @@ public class Link {
 			return end2;
 		}
 	}
+	
+	/**
+	 * Returns true if it is an edge of 2 given nodes
+	 * Returns false otherwise
+	 * @param start
+	 * @param end
+	 * @return
+	 */
 	public boolean isEdgeBetween(String start, String end) {
 		if(start == end1 && end == end2) return true;
 		if(start == end2 && end == end1) return true;
@@ -38,6 +49,10 @@ public class Link {
 		return false;
 	}
 	
+	/**
+	 * Prints link in the format
+	 * END1 END2 DELAY CAPACITY
+	 */
 	public void printLink() {
 		System.out.println(end1 + " " + end2 + " "+ delay + " "+capacity);
 	}

@@ -29,7 +29,9 @@ public class Graph {
 		}
 		printGraph();
 	}
-	
+	/**
+	 * Prints graph
+	 */
 	public void printGraph() {
 		for(String node : nodeList.keySet()) {
 			ArrayList<Link> links = nodeList.get(node);
