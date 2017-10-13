@@ -39,6 +39,12 @@ public class RoutingPerformance {
 		*3. least loaded (pick route where the 'narrowest' link that can accommodate highest capacity)
 		*/
 		
+		
+		
+		
+		
+		///////////////////////LOG//////////////////////////////////////////////////
+		int numberOfConnections = workloadFileArray.length;
 	}	
 	
 	public TreeMap<Float, String> addConnections(String workloadFile) throws FileNotFoundException {
