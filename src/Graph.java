@@ -29,6 +29,10 @@ public class Graph {
 		}
 		printGraph();
 	}
+	
+	public HashMap<String, ArrayList<Link>> getNodes(){
+		return nodeList;
+	}
 	/**
 	 * Prints graph
 	 */

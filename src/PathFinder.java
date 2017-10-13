@@ -1,14 +1,25 @@
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.PriorityQueue;
+import java.util.TreeSet;
+
+import org.w3c.dom.NodeList;
 
 public class PathFinder {
 	public State findPath(Graph g, String source, String dest) {
 		
 		PriorityQueue<Link> q = new PriorityQueue<Link>();
-		//State s = new State(0,source, dest);
-
+		State s = new State(0,source, dest);
+		TreeSet<State> toVisit = new TreeSet<State>();
+		HashMap<String, ArrayList<Link>> nodeList = g.getNodes();
 		while(!q.isEmpty()) {
-			
+			 State cur = toVisit.pollFirst();
+			 
+			 ArrayList neighbours = nodeList.get(cur.current);
+			 
 		}
+		
+		
 		/*
 		 * function Dijkstra(Graph, source):
 2      dist[source] ← 0                                    // Initialization
@@ -90,6 +101,8 @@ public class PathFinder {
     74
     75          }
 		 */
+	
+		return s;
 	}
 	
 	
