@@ -1,15 +1,11 @@
 import java.util.PriorityQueue;
 
 public class PathFinder {
-	public void findPath(Graph g, String source, String dest) {
+	public State findPath(Graph g, String source, String dest) {
 		
 		PriorityQueue<Link> q = new PriorityQueue<Link>();
 		//State s = new State(0,source, dest);
-		HashMap<Link,int> weight = 
-		for(Link l : q) {
-			
-		}
-		
+
 		while(!q.isEmpty()) {
 			
 		}
