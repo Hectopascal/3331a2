@@ -15,9 +15,9 @@ public class Graph {
 			while(sc.hasNextLine()) {
 				line = sc.nextLine();
 				String[] parts = line.split(" ",-1);
-				System.out.println(parts[0] + "#" + parts[1] + "#" + parts[2] + "#" + parts[3]);
+				//System.out.println(parts[0] + "#" + parts[1] + "#" + parts[2] + "#" + parts[3]);
 
-				Link newLink = new Link(parts[0],parts[1],Integer.parseInt(parts[2]),Integer.parseInt(parts[3]));
+				Link newLink = new Link(parts[0],parts[1],Integer.parseInt(parts[2]),Integer.parseInt(parts[3]),0);
 				if(!nodeList.containsKey(parts[0])) nodeList.put(parts[0],  new ArrayList<Link>());
 				if(!nodeList.containsKey(parts[1])) nodeList.put(parts[1],  new ArrayList<Link>());
 				nodeList.get(parts[0]).add(newLink);
@@ -35,7 +35,7 @@ public class Graph {
 	public void printGraph() {
 		for(String node : nodeList.keySet()) {
 			ArrayList<Link> links = nodeList.get(node);
-			System.out.println("Links on Node "+node+":");
+			//System.out.println("Links on Node "+node+":");
 			for(Link l : links) {
 				l.printLink();
 			}

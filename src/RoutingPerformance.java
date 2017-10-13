@@ -3,7 +3,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 public class RoutingPerformance {
 	String networkScheme;
@@ -20,15 +22,20 @@ public class RoutingPerformance {
 		
 		
 		String[] workloadFileArray = workloadFile.split("\n");
-		
+		TreeMap<Float,String> connections = new TreeMap<Float,String>();  
 		int packetRate = Integer.parseInt(args[4]);
 		int clockTick = 0;
 		int packetCounter = 0;
+		
 		String currentPacket;
 		float currentPacketTime;
 		String currentPacketSource;
 		String currentPacketDestination;
 		float currentPacketLength;
+		float currentPacketEndTime;
+		String pushLine;
+		String pullLine;
+		int connectionNumber = 0;
 		
 		
 		//int packetRate = Integer.parseInt(args[4]);
@@ -48,25 +55,21 @@ public class RoutingPerformance {
 		Scanner sc = new Scanner(new File(workloadFile));
 		
 		
-		while (clockTick < 10) {
+		while (connectionNumber < 10) {
 			currentPacket = sc.nextLine();
 			currentPacketTime = Float.parseFloat((currentPacket.split(" "))[0]);
 			currentPacketSource = (currentPacket.split(" "))[1];
 			currentPacketDestination = (currentPacket.split(" "))[2];
 			currentPacketLength = Float.parseFloat((currentPacket.split(" "))[3]);
-			System.out.println("currentPacketTime is " + currentPacketTime);
-			System.out.println("currentPacketSource is " + currentPacketSource);
-			System.out.println("currentPacketDestination is " + currentPacketDestination);
-			System.out.println("currentPacketLength is " + currentPacketLength);
-			
-			
-			
-			clockTick++;
+			currentPacketEndTime = currentPacketLength + currentPacketTime;
+			pushLine = "S " + currentPacketSource + " " + currentPacketDestination + " " + connectionNumber;
+			pullLine = "E " + currentPacketSource + " " + currentPacketDestination + " " + connectionNumber;
+			connections.put(currentPacketTime, pushLine);
+			connections.put(currentPacketEndTime, pullLine);
+			connectionNumber++;
+			System.out.println(connections.firstEntry());
+			connections.remove(connections.firstEntry().getKey());
 		}
-		
-		
-		
-	}
-	
-	
+		//newWorkloadFileArray.
+	}	
 }

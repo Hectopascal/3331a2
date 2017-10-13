@@ -2,15 +2,17 @@
 public class Link {
 	private int delay;
 	private int capacity;
+	private int currentLinks;
 	private String end1;
 	private String end2;
 	
-	public Link(String end1, String end2, int delay, int capacity) {
+	public Link(String end1, String end2, int delay, int capacity, int currentLinks) {
 		super();
 		this.delay = delay;
 		this.capacity = capacity;
 		this.end1 = end1;
 		this.end2 = end2;
+		this.currentLinks = currentLinks;
 	}
 	
 	/**
