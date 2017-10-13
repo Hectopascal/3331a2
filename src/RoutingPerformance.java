@@ -22,18 +22,9 @@ public class RoutingPerformance {
 		
 		
 		String[] workloadFileArray = workloadFile.split("\n");
-		TreeMap<Float,String> connections = new TreeMap<Float,String>();  
 		int packetRate = Integer.parseInt(args[4]);
+		TreeMap<Float,String> connections = addConnections(workloadFile);
 		
-		String currentPacket;
-		float currentPacketTime;
-		String currentPacketSource;
-		String currentPacketDestination;
-		float currentPacketLength;
-		float currentPacketEndTime;
-		String pushLine;
-		String pullLine;
-		int connectionNumber = 0;
 		
 		
 		//int packetRate = Integer.parseInt(args[4]);
@@ -48,9 +39,20 @@ public class RoutingPerformance {
 		*3. least loaded (pick route where the 'narrowest' link that can accommodate highest capacity)
 		*/
 		
-		
-
+	}	
+	
+	public static TreeMap<Float, String> addConnections(String workloadFile) throws FileNotFoundException {
 		Scanner sc = new Scanner(new File(workloadFile));
+		int connectionNumber = 0;
+		String currentPacket;
+		float currentPacketTime;
+		String currentPacketSource;
+		String currentPacketDestination;
+		float currentPacketLength;
+		float currentPacketEndTime;
+		String pushLine;
+		String pullLine;
+		TreeMap<Float,String> connections = new TreeMap<Float,String>();  
 		
 		while (connectionNumber < 10) {
 			currentPacket = sc.nextLine();
@@ -67,6 +69,7 @@ public class RoutingPerformance {
 			System.out.println(connections.firstEntry());
 			connections.remove(connections.firstEntry().getKey());
 		}
+		return connections;
 		
-	}	
+	}
 }
