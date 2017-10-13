@@ -11,7 +11,7 @@ public class RoutingPerformance {
 	String networkScheme;
 	String routingScheme;
 	int packetRate;
-	
+	TreeMap<Float,String> connections;
 	public static void main(String[] args) throws FileNotFoundException {
 		RoutingPerformance rp = new RoutingPerformance();
 		rp.networkScheme = args[0];
@@ -23,7 +23,7 @@ public class RoutingPerformance {
 		
 		String[] workloadFileArray = workloadFile.split("\n");
 		int packetRate = Integer.parseInt(args[4]);
-		TreeMap<Float,String> connections = addConnections(workloadFile);
+		rp.connections = rp.addConnections(workloadFile);
 		
 		
 		
@@ -41,7 +41,7 @@ public class RoutingPerformance {
 		
 	}	
 	
-	public static TreeMap<Float, String> addConnections(String workloadFile) throws FileNotFoundException {
+	public TreeMap<Float, String> addConnections(String workloadFile) throws FileNotFoundException {
 		Scanner sc = new Scanner(new File(workloadFile));
 		int connectionNumber = 0;
 		String currentPacket;
