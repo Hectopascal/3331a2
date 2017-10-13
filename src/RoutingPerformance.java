@@ -50,8 +50,6 @@ public class RoutingPerformance {
 		String currentPacketDestination;
 		float currentPacketLength;
 		float currentPacketEndTime;
-		String pushLine;
-		String pullLine;
 		TreeMap<Float,String> connections = new TreeMap<Float,String>();  
 		
 		while (connectionNumber < 10) {
@@ -61,10 +59,8 @@ public class RoutingPerformance {
 			currentPacketDestination = (currentPacket.split(" "))[2];
 			currentPacketLength = Float.parseFloat((currentPacket.split(" "))[3]);
 			currentPacketEndTime = currentPacketLength + currentPacketTime;
-			pushLine = "S " + currentPacketSource + " " + currentPacketDestination + " " + connectionNumber;
-			pullLine = "E " + currentPacketSource + " " + currentPacketDestination + " " + connectionNumber;
-			connections.put(currentPacketTime, pushLine);
-			connections.put(currentPacketEndTime, pullLine);
+			connections.put(currentPacketTime, "S " + currentPacketSource + " " + currentPacketDestination + " " + connectionNumber);
+			connections.put(currentPacketEndTime, "E " + currentPacketSource + " " + currentPacketDestination + " " + connectionNumber);
 			connectionNumber++;
 			System.out.println(connections.firstEntry());
 			connections.remove(connections.firstEntry().getKey());
