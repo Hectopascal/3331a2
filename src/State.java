@@ -1,15 +1,17 @@
 
 public class State  implements Comparable<State>{
-	private int cost;
+	public int cost;
 	public String destination;
 	public String current;
+	public State prev;
 	
 	
-	public State(int cost, String current,String destination) {
+	public State(int cost, String current,String destination,State prev) {
 		super();
 		this.cost = cost;
 		this.destination = destination;
 		this.current = current;
+		this.prev = prev;
 	}
 
 

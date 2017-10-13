@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.TreeSet;
 
@@ -15,8 +16,11 @@ public class PathFinder {
 		while(!q.isEmpty()) {
 			 State cur = toVisit.pollFirst();
 			 
-			 ArrayList neighbours = nodeList.get(cur.current);
-			 
+			 LinkedList<Link> neighbours = new LinkedList<Link>(nodeList.get(cur.current));
+			 while(!neighbours.isEmpty()) {
+				 neighbours.
+				 State possibleState = new State(cur.cost+)
+			 }
 		}
 		
 		
