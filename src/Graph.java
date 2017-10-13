@@ -15,7 +15,7 @@ public class Graph {
 			while(sc.hasNextLine()) {
 				line = sc.nextLine();
 				String[] parts = line.split(" ",-1);
-				//System.out.println(parts[0]+"#"+parts[1]+"#"+parts[2]+"#"+parts[3]);
+				System.out.println(parts[0] + "#" + parts[1] + "#" + parts[2] + "#" + parts[3]);
 
 				Link newLink = new Link(parts[0],parts[1],Integer.parseInt(parts[2]),Integer.parseInt(parts[3]));
 				if(!nodeList.containsKey(parts[0])) nodeList.put(parts[0],  new ArrayList<Link>());
