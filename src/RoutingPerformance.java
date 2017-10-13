@@ -24,8 +24,6 @@ public class RoutingPerformance {
 		String[] workloadFileArray = workloadFile.split("\n");
 		TreeMap<Float,String> connections = new TreeMap<Float,String>();  
 		int packetRate = Integer.parseInt(args[4]);
-		int clockTick = 0;
-		int packetCounter = 0;
 		
 		String currentPacket;
 		float currentPacketTime;
@@ -54,7 +52,6 @@ public class RoutingPerformance {
 
 		Scanner sc = new Scanner(new File(workloadFile));
 		
-		
 		while (connectionNumber < 10) {
 			currentPacket = sc.nextLine();
 			currentPacketTime = Float.parseFloat((currentPacket.split(" "))[0]);
@@ -70,6 +67,6 @@ public class RoutingPerformance {
 			System.out.println(connections.firstEntry());
 			connections.remove(connections.firstEntry().getKey());
 		}
-		//newWorkloadFileArray.
+		
 	}	
 }

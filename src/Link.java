@@ -12,7 +12,7 @@ public class Link {
 		this.capacity = capacity;
 		this.end1 = end1;
 		this.end2 = end2;
-		this.currentLinks = currentLinks;
+		this.setCurrentLinks(currentLinks);
 	}
 	
 	/**
@@ -94,5 +94,20 @@ public class Link {
 		this.end2 = end2;
 	}
 	
+	public void increaseLink() {
+		this.setCurrentLinks(this.getCurrentLinks() + 1);
+	}
+	
+	public void decreaseLink() {
+		this.setCurrentLinks(this.getCurrentLinks() - 1);
+	}
+
+	public int getCurrentLinks() {
+		return currentLinks;
+	}
+
+	public void setCurrentLinks(int currentLinks) {
+		this.currentLinks = currentLinks;
+	}
 	
 }
