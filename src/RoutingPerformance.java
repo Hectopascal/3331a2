@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.TreeMap;
 
@@ -39,6 +40,30 @@ public class RoutingPerformance {
 		*3. least loaded (pick route where the 'narrowest' link that can accommodate highest capacity)
 		*/
 		
+		HashMap<String, String> s;
+		PathFinder pf = new PathFinder();
+		ArrayList<String> route = new ArrayList<String>();
+		
+		String currentNode;
+		String destinationNode;
+		while (!rp.connections.isEmpty()) {
+			
+			//if connection is add {
+				//get the route from algo
+			if (rp.connections.firstEntry().getValue().split(" ")[0] == "1")
+				currentNode = rp.connections.firstEntry().getValue().split(" ")[1];
+				destinationNode = rp.connections.firstEntry().getValue().split(" ")[2];
+				s = pf.findPath(g, currentNode, destinationNode, rp.routingScheme);
+				
+				//update the map, add route onto another treemap
+				
+				//update statistics		
+				
+				rp.connections.remove(rp.connections.firstEntry().getKey());
+			//else if the connection is end
+				//update the map, delete route from treemap
+			
+		}		
 		
 		
 		
