@@ -35,29 +35,39 @@ public class RoutingPerformance {
 		*/
 		
 		HashMap<String, String> s;
+		HashMap<String, ArrayList<String>> addedPaths = null;
 		PathFinder pf = new PathFinder();
-		ArrayList<String> route = new ArrayList<String>();
 		
 		String currentNode = "A";
 		String destinationNode = "A";
 		String tempNode = "A";
 		String tempNode2 = "A";
+		String[] packetInfo = rp.connections.firstEntry().getValue().split(" ");
+		ArrayList<String> path = new ArrayList<String>();
+		
 		while (!rp.connections.isEmpty()) {//while there are still connections to be routed
-			//if connection is add {
-			//get the route from algo
-			System.out.println("thing is " + rp.connections.firstEntry().getValue().split(" ")[1]);
-			if (rp.connections.firstEntry().getValue().split(" ")[0] == "1") {
-				currentNode = rp.connections.firstEntry().getValue().split(" ")[1];
+			packetInfo = rp.connections.firstEntry().getValue().split(" ");
+			System.out.println(packetInfo[0]);
+			if (packetInfo[0].equals("S")) {
+				//if connection is add {
+				//get the route from algo
+				System.out.println("ehueuheu");
+				currentNode = packetInfo[1];
 				System.out.println("current is " + currentNode);
-				destinationNode = rp.connections.firstEntry().getValue().split(" ")[2];
+				destinationNode = packetInfo[2];
+				System.out.println("destination is " + destinationNode);
 				s = pf.findPath(g, currentNode, destinationNode, rp.routingScheme);
+				
 				tempNode = destinationNode;
+				path.add(destinationNode);
 				while (!s.isEmpty()) {
 					tempNode2 = s.get(tempNode);
+					path.add(tempNode2);
 					s.remove(tempNode);
 					tempNode = tempNode2;
 				}
-				
+				addedPaths.put(rp.connections.firstEntry().getValue(), path);
+
 			} else {
 				System.out.println("lahblah");
 			}
