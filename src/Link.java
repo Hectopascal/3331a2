@@ -19,7 +19,7 @@ public class Link {
 	 * Returns true if the node is connected to given end
 	 */
 	public boolean isConnectedTo(String end) {
-		return (end == end1 || end == end2);
+		return (end.equals(end1) || end.equals(end2));
 	}
 	
 	/**
