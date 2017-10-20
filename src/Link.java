@@ -95,11 +95,11 @@ public class Link {
 	}
 	
 	public void increaseLink() {
-		this.setCurrentLinks(this.getCurrentLinks() + 1);
+		currentLinks+=1;
 	}
 	
 	public void decreaseLink() {
-		this.setCurrentLinks(this.getCurrentLinks() - 1);
+		currentLinks-=1;
 	}
 
 	public int getCurrentLinks() {

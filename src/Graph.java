@@ -38,6 +38,13 @@ public class Graph {
 	public ArrayList<Link> getLinks(){
 		return links;
 	}
+	public Link getLink(String a, String b) {
+		ArrayList<Link> links =  nodeList.get(a);
+		for(Link l : links) {
+			if(l.isEdgeBetween(a, b)) return l;
+		}
+		return null;
+	}
 	/**
 	 * Prints graph
 	 */
