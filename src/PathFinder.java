@@ -7,7 +7,7 @@ import java.util.TreeSet;
 
 public class PathFinder {
 	
-	public HashMap<String, String> findPath (Graph g, String source, String dest, String routingScheme) {
+	public HashMap<String,String> findPath (Graph g, String source, String dest, String routingScheme) {
 		//TODO
 		if (routingScheme == "SHP") {
 			
@@ -18,7 +18,7 @@ public class PathFinder {
 		return findPathSDP(g, source, dest); //SDP
 	}
 	
-	public HashMap<String, String> findPathSDP(Graph g, String source, String dest) {
+	public HashMap<String,String> findPathSDP(Graph g, String source, String dest) {
 		HashMap<String,Integer> nodeCosts = new HashMap<String,Integer>();
 		HashMap<String, String> prevNode = new HashMap<String,String>();
 		HashMap<String, ArrayList<Link>> nodeList = new HashMap<String,ArrayList<Link>>(g.getNodes());

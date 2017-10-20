@@ -21,10 +21,8 @@ public class RoutingPerformance {
 		String topologyFile = args[2];
 		String workloadFile = args[3];
 		
-		
 		String[] workloadFileArray = workloadFile.split("\n");
 		rp.connections = rp.addConnections(workloadFile);
-		
 		
 		Graph g = new Graph(topologyFile);
 
@@ -47,8 +45,10 @@ public class RoutingPerformance {
 		while (!rp.connections.isEmpty()) {//while there are still connections to be routed
 			//if connection is add {
 			//get the route from algo
+			System.out.println("thing is " + rp.connections.firstEntry().getValue().split(" ")[1]);
 			if (rp.connections.firstEntry().getValue().split(" ")[0] == "1")
 				currentNode = rp.connections.firstEntry().getValue().split(" ")[1];
+				System.out.println("current is " + currentNode);
 				destinationNode = rp.connections.firstEntry().getValue().split(" ")[2];
 				s = pf.findPath(g, currentNode, destinationNode, rp.routingScheme);
 				tempNode = destinationNode;
@@ -57,18 +57,12 @@ public class RoutingPerformance {
 					s.remove(tempNode);
 					tempNode = tempNode2;
 				}
-				//update the map, add route onto another treemap
-				
-				//update statistics		
-				
-				rp.connections.remove(rp.connections.firstEntry().getKey());
+			//update the map, add route onto another treemap
+			//update statistics		
+			rp.connections.remove(rp.connections.firstEntry().getKey());
 			//else if the connection is end
-				//update the map, delete route from treemap
-			
-		}		
-		
-		
-		
+			//update the map, delete route from treemap
+		}	
 		
 		///////////////////////LOG//////////////////////////////////////////////////
 		int numberOfConnections = workloadFileArray.length;
