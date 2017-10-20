@@ -23,32 +23,36 @@ public class PathFinder {
 		HashMap<String, String> prevNode = new HashMap<String,String>();
 		HashMap<String, ArrayList<Link>> nodeList = new HashMap<String,ArrayList<Link>>(g.getNodes());
 		
+		//put in first node
 		nodeCosts.put(source, 0);
 		prevNode.put(source, null);
 		
 		while (!nodeList.isEmpty()) {
+			//get minimum cost node from the list
 			 String cur = getMinimum(nodeList, nodeCosts);
 			 System.out.println(cur);
-			 // System.out.println(nodeList.get(cur));
-			 // System.out.println(nodeList.size());
-			 if(cur == null) {
-				 nodeList.remove(cur);
-				 System.out.println(nodeList.size());
-				 break;
-			 }
-			 LinkedList<Link> neighbours = new LinkedList<Link>(nodeList.get(cur));
-			 //nodeList.remove(cur);
 			 
+			 
+			 //get neighbours
+			 LinkedList<Link> neighbours = new LinkedList<Link>(nodeList.get(cur));
+			 
+			 nodeList.remove(cur);
+			 
+			 
+			 //get update distance/cost for each neighbour
 			 while (!neighbours.isEmpty()) {
 				 Link n = neighbours.removeFirst();
 				 String neighbourNode = n.otherEnd(cur);
 				 
+				 //if hashmap already has this neighbour
 				 if (nodeCosts.containsKey(neighbourNode)) {
+					 //check if this new path has less cost, if yes, add.
 					 if (nodeCosts.get(neighbourNode) > nodeCosts.get(cur)+n.getDelay()) {
 						 nodeCosts.put(neighbourNode, nodeCosts.get(cur)+n.getDelay());
 						 prevNode.put(neighbourNode, cur);
 					 }
-				 } else {					 
+				 } else {				
+					 //make new entry and update cost
 					 nodeCosts.put(neighbourNode, nodeCosts.get(cur)+n.getDelay());
 					 prevNode.put(neighbourNode, cur);
 				 }
