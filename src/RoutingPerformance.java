@@ -71,6 +71,7 @@ public class RoutingPerformance {
 					rp.g.getLink(curNode, stk.peek()).decreaseLink();
 					curNode = stk.pop();
 				}
+				
 				rp.activePaths.remove(rp.connections.firstEntry().getValue().split(" ",2)[1]);
 				
 			}else {
