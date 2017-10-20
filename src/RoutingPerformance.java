@@ -46,7 +46,7 @@ public class RoutingPerformance {
 			//if connection is add {
 			//get the route from algo
 			System.out.println("thing is " + rp.connections.firstEntry().getValue().split(" ")[1]);
-			if (rp.connections.firstEntry().getValue().split(" ")[0] == "1")
+			if (rp.connections.firstEntry().getValue().split(" ")[0] == "1") {
 				currentNode = rp.connections.firstEntry().getValue().split(" ")[1];
 				System.out.println("current is " + currentNode);
 				destinationNode = rp.connections.firstEntry().getValue().split(" ")[2];
@@ -57,6 +57,10 @@ public class RoutingPerformance {
 					s.remove(tempNode);
 					tempNode = tempNode2;
 				}
+				
+			} else {
+				System.out.println("lahblah");
+			}
 			//update the map, add route onto another treemap
 			//update statistics		
 			rp.connections.remove(rp.connections.firstEntry().getKey());
