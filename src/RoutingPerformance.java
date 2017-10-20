@@ -13,7 +13,7 @@ import java.util.TreeMap;
 public class RoutingPerformance {
 	String networkScheme;
 	String routingScheme;
-	static int count;
+	int totalConnections;
 	int packetRate;
 	TreeMap<Float,String> connections;
 	HashMap<String, Stack<String>> activePaths = new HashMap<String,Stack<String>>();
@@ -22,7 +22,6 @@ public class RoutingPerformance {
 		RoutingPerformance rp = new RoutingPerformance();
 		rp.networkScheme = args[0];
 		rp.routingScheme = args[1];
-		count = 0;
 		String topologyFile = args[2];
 		String workloadFile = args[3];
 		
@@ -43,8 +42,7 @@ public class RoutingPerformance {
 		
 		String currentNode = "A";
 		String destinationNode = "A";
-		String tempNode = "A";
-		String tempNode2 = "A";
+		
 		String[] packetInfo = rp.connections.firstEntry().getValue().split(" ");
 		//ArrayList<String> path = new ArrayList<String>();
 		int i = 0;
@@ -62,7 +60,7 @@ public class RoutingPerformance {
 
 				//Calculate and update capacities
 				HashMap<String, String> s = pf.findPath(rp.g, currentNode, destinationNode, rp.routingScheme);
-				count++;
+				rp.totalConnections++;
 				rp.updateCapacities(s, destinationNode,currentNode,rp.connections.firstEntry().getValue().split(" ",2)[1]);
 				
 			} else if(packetInfo[0].equals("E")){
@@ -91,7 +89,7 @@ public class RoutingPerformance {
 		
 		///////////////////////LOG//////////////////////////////////////////////////
 		int numberOfConnections = workloadFileArray.length;
-		System.out.println("DONE" + count);
+		System.out.println("DONE" + rp.totalConnections);
 		System.out.println(i);
 	}	
 	
@@ -136,7 +134,7 @@ public class RoutingPerformance {
 		float currentPacketEndTime;
 		TreeMap<Float,String> connections = new TreeMap<Float,String>();  
 		
-		while (connectionNumber < 10) {
+		while (sc.hasNextLine()) {
 			currentPacket = sc.nextLine();
 			//System.out.println("currentpacket is " + currentPacket);
 			currentPacketTime = Float.parseFloat((currentPacket.split(" "))[0]);
