@@ -57,16 +57,17 @@ public class RoutingPerformance {
 				destinationNode = packetInfo[2];
 				System.out.println("destination is " + destinationNode);
 				s = pf.findPath(g, currentNode, destinationNode, rp.routingScheme);
+				//s is the hash map thing after finding path
 				
-				tempNode = destinationNode;
-				path.add(destinationNode);
-				while (!s.isEmpty()) {
-					tempNode2 = s.get(tempNode);
-					path.add(tempNode2);
-					s.remove(tempNode);
-					tempNode = tempNode2;
+				tempNode = destinationNode;                                          //
+				path.add(destinationNode);                                           //
+				while (!s.isEmpty()) {                                               //this whole thing is adding the paths 
+					tempNode2 = s.get(tempNode);                                     //onto the addedpaths hashmap so we
+					path.add(tempNode2);                                             //know whats been added
+					s.remove(tempNode);                                              //
+					tempNode = tempNode2;                                            //the key is the connection.getvalue
 				}
-				addedPaths.put(rp.connections.firstEntry().getValue(), path);
+				addedPaths.put(rp.connections.firstEntry().getValue(), path);        //the value is the arraylist of path strings 
 
 			} else {
 				System.out.println("lahblah");
