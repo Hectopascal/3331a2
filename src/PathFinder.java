@@ -28,9 +28,16 @@ public class PathFinder {
 		
 		while (!nodeList.isEmpty()) {
 			 String cur = getMinimum(nodeList, nodeCosts);
+			 System.out.println(cur);
+			 // System.out.println(nodeList.get(cur));
+			 // System.out.println(nodeList.size());
+			 if(cur == null) {
+				 nodeList.remove(cur);
+				 System.out.println(nodeList.size());
+				 break;
+			 }
 			 LinkedList<Link> neighbours = new LinkedList<Link>(nodeList.get(cur));
-			 
-			 nodeList.remove(cur);
+			 //nodeList.remove(cur);
 			 
 			 while (!neighbours.isEmpty()) {
 				 Link n = neighbours.removeFirst();
@@ -48,14 +55,27 @@ public class PathFinder {
 				 
 			 }
 		}
+		
+		System.out.println("found");
+		printPath(prevNode,dest);
 		return prevNode;
 	}
 	
+	public void printPath(HashMap<String,String> path,String destination){
+		String key = destination;
+		System.out.println("Printing path ");
+		while(path.get(key) != null) {
+			System.out.print(path.get(key) + " ");
+			key = path.get(key);
+		}
+		System.out.println("");
+	}
 	private String getMinimum(HashMap<String, ArrayList<Link>> nodeList, HashMap<String, Integer> nodeCosts) {
 		String minimum = null;
 		int minCost = Integer.MAX_VALUE;
 		for (String key : nodeList.keySet()) {
 			if (nodeCosts.containsKey(key) && nodeCosts.get(key)<minCost) {
+				System.out.println(key+" ");
 				minimum = key;
 				minCost = nodeCosts.get(key);
 			}
