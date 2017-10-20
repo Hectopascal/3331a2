@@ -28,12 +28,14 @@ public class Link {
 	 * @return otherEnd
 	 */
 	public String otherEnd(String thisEnd) {
-		if(end1 !=thisEnd) { 
-			if(end2!= thisEnd) return ""; //not connected
-			
-			return end1;
+		if(end1.equals(thisEnd)) { 
+			if(end2.equals(thisEnd)) {
+				return ""; //not connected
+			} else {
+				return end2;
+			}
 		} else {
-			return end2;
+			return end1;
 		}
 	}
 	
@@ -56,7 +58,7 @@ public class Link {
 	 * END1 END2 DELAY CAPACITY
 	 */
 	public void printLink() {
-		//System.out.println(end1 + " " + end2 + " "+ delay + " "+capacity);
+		System.out.println(end1 + " " + end2 + " "+ delay + " "+capacity);
 	}
 	
 	

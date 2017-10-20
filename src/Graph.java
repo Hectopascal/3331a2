@@ -51,7 +51,7 @@ public class Graph {
 	public void printGraph() {
 		for(String node : nodeList.keySet()) {
 			ArrayList<Link> links = nodeList.get(node);
-			//System.out.println("Links on Node "+node+":");
+			System.out.println("Links on Node "+node+":");
 			for(Link l : links) {
 				l.printLink();
 			}
