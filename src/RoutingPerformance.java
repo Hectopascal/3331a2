@@ -119,7 +119,7 @@ public class RoutingPerformance {
 		float currentPacketEndTime;
 		TreeMap<Float,String> connections = new TreeMap<Float,String>();  
 		
-		while (connectionNumber < 10) {
+		while (sc.hasNextLine()) {
 			currentPacket = sc.nextLine();
 			//System.out.println("currentpacket is " + currentPacket);
 			currentPacketTime = Float.parseFloat((currentPacket.split(" "))[0]);
