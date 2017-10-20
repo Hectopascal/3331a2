@@ -85,6 +85,7 @@ public class RoutingPerformance {
 		
 		///////////////////////LOG//////////////////////////////////////////////////
 		int numberOfConnections = workloadFileArray.length;
+		System.out.println("DONE");
 	}	
 	
 	

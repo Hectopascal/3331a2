@@ -36,27 +36,27 @@ public class PathFinder {
 			 
 			 //get neighbours
 			 LinkedList<Link> neighbours = new LinkedList<Link>(nodeList.get(cur));
-			 System.out.println("amount of neighbours is " + neighbours.size());
+			 //System.out.println("amount of neighbours is " + neighbours.size());
 			 nodeList.remove(cur);
 			 
 			 //get update distance/cost for each neighbour
 			 while (!neighbours.isEmpty()) {
 				 Link n = neighbours.removeFirst();
 				 String neighbourNode = n.otherEnd(cur);
-				 System.out.println("neighbour is " + neighbourNode);
+				 //System.out.println("neighbour is " + neighbourNode);
 				 
 				 //if hashmap already has this neighbour
 				 if (nodeCosts.containsKey(neighbourNode)) {
 					 //check if this new path has less cost, if yes, add.
 					 if (nodeCosts.get(neighbourNode) > nodeCosts.get(cur) + n.getDelay()) {
-						 System.out.println("cost less, adding " + neighbourNode);
+						 //System.out.println("cost less, adding " + neighbourNode);
 						 nodeCosts.put(neighbourNode, nodeCosts.get(cur) + n.getDelay());
 						 prevNode.put(neighbourNode, cur);
 					 } else {
-						 System.out.println("doesnt cost less");
+						 //System.out.println("doesnt cost less");
 					 }
 				 } else {
-					 System.out.println("doesnt already have this neighbour, adding " + neighbourNode);
+					 //System.out.println("doesnt already have this neighbour, adding " + neighbourNode);
 					 //make new entry and update cost
 					 nodeCosts.put(neighbourNode, nodeCosts.get(cur) + n.getDelay());
 					 prevNode.put(neighbourNode, cur);
@@ -72,7 +72,9 @@ public class PathFinder {
 	
 	public void printPath(HashMap<String,String> path,String destination){
 		String key = destination;
-		System.out.println("Printing path ");
+		System.out.println("Printing path " );
+
+		System.out.print(key+" " );
 		while(path.get(key) != null) {
 			System.out.print(path.get(key) + " ");
 			key = path.get(key);
@@ -84,7 +86,7 @@ public class PathFinder {
 		int minCost = Integer.MAX_VALUE;
 		for (String key : nodeList.keySet()) {
 			if (nodeCosts.containsKey(key) && nodeCosts.get(key)<minCost) {
-				System.out.println(key+" ");
+				//System.out.println(key+" ");
 				minimum = key;
 				minCost = nodeCosts.get(key);
 			}

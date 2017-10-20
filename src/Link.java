@@ -47,8 +47,8 @@ public class Link {
 	 * @return
 	 */
 	public boolean isEdgeBetween(String start, String end) {
-		if(start == end1 && end == end2) return true;
-		if(start == end2 && end == end1) return true;
+		if(start.equals(end1) && end.equals(end2)) return true;
+		if(start.equals(end2) && end.equals(end1)) return true;
 		
 		return false;
 	}
