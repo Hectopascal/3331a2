@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 public class Graph {
 	HashMap<String, ArrayList<Link>> nodeList;
+	ArrayList<Link> links;
 	
 	public Graph(String topologyFile) {
 		nodeList = new HashMap<String, ArrayList<Link>>();
@@ -32,6 +33,10 @@ public class Graph {
 	
 	public HashMap<String, ArrayList<Link>> getNodes(){
 		return nodeList;
+	}
+	
+	public ArrayList<Link> getLinks(){
+		return links;
 	}
 	/**
 	 * Prints graph

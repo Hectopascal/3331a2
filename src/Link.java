@@ -12,7 +12,7 @@ public class Link {
 		this.capacity = capacity;
 		this.end1 = end1;
 		this.end2 = end2;
-		this.setCurrentLinks(currentLinks);
+		this.currentLinks = currentLinks;
 	}
 	
 	/**
@@ -56,7 +56,7 @@ public class Link {
 	 * END1 END2 DELAY CAPACITY
 	 */
 	public void printLink() {
-		System.out.println(end1 + " " + end2 + " "+ delay + " "+capacity);
+		//System.out.println(end1 + " " + end2 + " "+ delay + " "+capacity);
 	}
 	
 	
