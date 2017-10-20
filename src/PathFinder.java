@@ -42,6 +42,11 @@ public class PathFinder {
 			 //get update distance/cost for each neighbour
 			 while (!neighbours.isEmpty()) {
 				 Link n = neighbours.removeFirst();
+
+				 if(!n.isAvailable()) {
+					 System.out.println("NOT AVAILABLE");
+					 continue;
+				 }
 				 String neighbourNode = n.otherEnd(cur);
 				 //System.out.println("neighbour is " + neighbourNode);
 				 

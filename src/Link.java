@@ -14,7 +14,10 @@ public class Link {
 		this.end2 = end2;
 		this.currentLinks = currentLinks;
 	}
-	
+	public boolean isAvailable() {
+		//System.out.println(end1 + " "+ end2+" Capacity is "+ capacity + "available "+(capacity-currentLinks));
+		return (capacity - currentLinks) > 0;
+	}
 	/**
 	 * Returns true if the node is connected to given end
 	 */
