@@ -9,9 +9,11 @@ import java.util.Scanner;
 import java.util.Stack;
 import java.util.TreeMap;
 
+
 public class RoutingPerformance {
 	String networkScheme;
 	String routingScheme;
+	static int count;
 	int packetRate;
 	TreeMap<Float,String> connections;
 	HashMap<String, Stack<String>> activePaths = new HashMap<String,Stack<String>>();
@@ -20,7 +22,7 @@ public class RoutingPerformance {
 		RoutingPerformance rp = new RoutingPerformance();
 		rp.networkScheme = args[0];
 		rp.routingScheme = args[1];
-		
+		count = 0;
 		String topologyFile = args[2];
 		String workloadFile = args[3];
 		
@@ -61,6 +63,7 @@ public class RoutingPerformance {
 
 				//Calculate and update capacities
 				HashMap<String, String> s = pf.findPath(rp.g, currentNode, destinationNode, rp.routingScheme);
+				count++;
 				rp.updateCapacities(s, destinationNode,rp.connections.firstEntry().getValue().split(" ",2)[1]);
 				
 			} else if(packetInfo[0].equals("E")){
@@ -86,7 +89,7 @@ public class RoutingPerformance {
 		
 		///////////////////////LOG//////////////////////////////////////////////////
 		int numberOfConnections = workloadFileArray.length;
-		System.out.println("DONE");
+		System.out.println("DONE" + count);
 	}	
 	
 	
