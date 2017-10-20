@@ -102,7 +102,7 @@ public class RoutingPerformance {
 			System.out.println(curNode + " "+ source);
 			curNode = s.get(curNode);
 		}
-		
+		System.out.println(curNode + " "+ source);
 		if(!curNode.equals(source)) {
 			//no path!!!!
 			System.out.println("NOPATH cur is "+curNode + " source is "+source);
@@ -136,7 +136,7 @@ public class RoutingPerformance {
 		float currentPacketEndTime;
 		TreeMap<Float,String> connections = new TreeMap<Float,String>();  
 		
-		while (connectionNumber < 10) {
+		while (sc.hasNextLine()) {
 			currentPacket = sc.nextLine();
 			//System.out.println("currentpacket is " + currentPacket);
 			currentPacketTime = Float.parseFloat((currentPacket.split(" "))[0]);
