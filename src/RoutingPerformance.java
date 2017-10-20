@@ -100,7 +100,7 @@ public class RoutingPerformance {
 			System.out.println(curNode + " "+ source);
 			curNode = s.get(curNode);
 		}
-		
+		System.out.println(curNode + " "+ source);
 		if(!curNode.equals(source)) {
 			//no path!!!!
 			System.out.println("NOPATH cur is "+curNode + " source is "+source);

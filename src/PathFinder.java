@@ -10,7 +10,7 @@ public class PathFinder {
 	public HashMap<String,String> findPath (Graph g, String source, String dest, String routingScheme) {
 		//TODO
 		if (routingScheme == "SHP") {
-			
+			return findPathSHP(g,source,dest);
 		} else if (routingScheme == "LLP") {
 			
 		}
@@ -30,8 +30,6 @@ public class PathFinder {
 			//get minimum cost node from the list
 			//System.out.println("source is " + source);
 			 String cur = getMinimum(nodeList, nodeCosts);
-			 //System.out.println("minimum cur is " + cur);
-			 //System.out.println(cur);
 			 
 			 //get neighbours
 			 LinkedList<Link> neighbours = new LinkedList<Link>(nodeList.get(cur));
@@ -44,23 +42,20 @@ public class PathFinder {
 
 				 if(!n.isAvailable()) {
 					 System.out.println("NOT AVAILABLE");
-					 //continue;
+					 continue;
 				 }
 				 String neighbourNode = n.otherEnd(cur);
-				 //System.out.println("neighbour is " + neighbourNode);
 				 
-				 //if hashmap already has this neighbour
 				 if (nodeCosts.containsKey(neighbourNode)) {
 					 //check if this new path has less cost, if yes, add.
 					 if (nodeCosts.get(neighbourNode) > nodeCosts.get(cur) + 1) {
-						 //System.out.println("cost less, adding " + neighbourNode);
+						 
 						 nodeCosts.put(neighbourNode, nodeCosts.get(cur) + 1);
 						 prevNode.put(neighbourNode, cur);
 					 } else {
 						 //System.out.println("doesnt cost less");
 					 }
 				 } else {
-					 //System.out.println("doesnt already have this neighbour, adding " + neighbourNode);
 					 //make new entry and update cost
 					 nodeCosts.put(neighbourNode, nodeCosts.get(cur) + 1);
 					 prevNode.put(neighbourNode, cur);
@@ -86,8 +81,11 @@ public class PathFinder {
 			//get minimum cost node from the list
 			//System.out.println("source is " + source);
 			 String cur = getMinimum(nodeList, nodeCosts);
-			 //System.out.println("minimum cur is " + cur);
-			 //System.out.println(cur);
+			 
+			 if(cur == null) {
+				 System.out.println("NO available nodes left");
+				 return prevNode; //couldn't find anything else. No path!
+			 }
 			 
 			 //get neighbours
 			 LinkedList<Link> neighbours = new LinkedList<Link>(nodeList.get(cur));
@@ -99,7 +97,7 @@ public class PathFinder {
 				 Link n = neighbours.removeFirst();
 
 				 if(!n.isAvailable()) {
-					 System.out.println("NOT AVAILABLE");
+					 //System.out.println("NOT AVAILABLE");
 					 continue;
 				 }
 				 String neighbourNode = n.otherEnd(cur);
@@ -151,6 +149,7 @@ public class PathFinder {
 				minCost = nodeCosts.get(key);
 			}
 		}
+		
 		return minimum;
 	}
 	
