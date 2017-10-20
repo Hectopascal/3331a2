@@ -13,8 +13,15 @@ import java.util.TreeMap;
 public class RoutingPerformance {
 	String networkScheme;
 	String routingScheme;
-	static int count;
-	int packetRate;
+	
+	static int numberOfConnections;
+	static int numberOfPackets;
+	static int successPackets;
+	static int failPackets;
+	static int averageHops;
+	static int cumulativeDelay;
+	
+	static int packetRate;
 	TreeMap<Float,String> connections;
 	HashMap<String, Stack<String>> activePaths = new HashMap<String,Stack<String>>();
 	Graph g;
@@ -22,14 +29,12 @@ public class RoutingPerformance {
 		RoutingPerformance rp = new RoutingPerformance();
 		rp.networkScheme = args[0];
 		rp.routingScheme = args[1];
-		count = 0;
 		String topologyFile = args[2];
 		String workloadFile = args[3];
 		
 		String[] workloadFileArray = workloadFile.split("\n");
 		rp.connections = rp.addConnections(workloadFile);
-		
-		 rp.g = new Graph(topologyFile);
+		rp.g = new Graph(topologyFile);
 
 		/* 3 algorithms to implement (Dijkstra's):
 		*
@@ -43,11 +48,7 @@ public class RoutingPerformance {
 		
 		String currentNode = "A";
 		String destinationNode = "A";
-		String tempNode = "A";
-		String tempNode2 = "A";
 		String[] packetInfo = rp.connections.firstEntry().getValue().split(" ");
-		//ArrayList<String> path = new ArrayList<String>();
-		int i = 0;
 		while (!rp.connections.isEmpty()) {//while there are still connections to be routed
 			packetInfo = rp.connections.firstEntry().getValue().split(" ");
 			System.out.println(packetInfo[0]);
@@ -61,12 +62,15 @@ public class RoutingPerformance {
 				System.out.println("destination is " + destinationNode);
 
 				//Calculate and update capacities
-				HashMap<String, String> s = pf.findPath(rp.g, currentNode, destinationNode, rp.routingScheme);
-				count++;
-				rp.updateCapacities(s, destinationNode,currentNode,rp.connections.firstEntry().getValue().split(" ",2)[1]);
+
+				//if (its not blocked)
+					HashMap<String, String> s = pf.findPath(rp.g, currentNode, destinationNode, rp.routingScheme);
+					numberOfConnections++;
+					successPackets = (int) (successPackets + (Float.parseFloat(packetInfo[4]) * packetRate));
+					System.out.println("successpackets " + packetInfo[4]);
+				rp.updateCapacities(s, destinationNode, currentNode,rp.connections.firstEntry().getValue().split(" ",2)[1]);
 				
 			} else if(packetInfo[0].equals("E")){
-				
 				Stack<String> stk = rp.activePaths.get(rp.connections.firstEntry().getValue().split(" ",2)[1]);
 				if(stk!=null) {
 					String curNode = stk.pop();
@@ -80,7 +84,6 @@ public class RoutingPerformance {
 				
 			}else {
 				System.out.println("lahblah");
-				i++;
 			}
 			//update the map, add route onto another treemap
 			//update statistics		
@@ -90,9 +93,9 @@ public class RoutingPerformance {
 		}	
 		
 		///////////////////////LOG//////////////////////////////////////////////////
-		int numberOfConnections = workloadFileArray.length;
-		System.out.println("DONE" + count);
-		System.out.println(i);
+
+		System.out.println("Total number of connections is: " + numberOfConnections);
+		System.out.println("Total number of packets is: " + numberOfPackets);
 	}	
 	
 	
@@ -134,9 +137,10 @@ public class RoutingPerformance {
 		String currentPacketDestination;
 		float currentPacketLength;
 		float currentPacketEndTime;
+		float connectionDuration;
 		TreeMap<Float,String> connections = new TreeMap<Float,String>();  
 		
-		while (connectionNumber < 10) {
+		while (sc.hasNextLine()) {
 			currentPacket = sc.nextLine();
 			//System.out.println("currentpacket is " + currentPacket);
 			currentPacketTime = Float.parseFloat((currentPacket.split(" "))[0]);
@@ -144,8 +148,9 @@ public class RoutingPerformance {
 			currentPacketDestination = (currentPacket.split(" "))[2];
 			currentPacketLength = Float.parseFloat((currentPacket.split(" "))[3]);
 			currentPacketEndTime = currentPacketLength + currentPacketTime;
-			connections.put(currentPacketTime, "S " + currentPacketSource + " " + currentPacketDestination + " " + connectionNumber);
-			connections.put(currentPacketEndTime, "E " + currentPacketSource + " " + currentPacketDestination + " " + connectionNumber);
+			connectionDuration = currentPacketEndTime - currentPacketTime;
+			connections.put(currentPacketTime, "S " + currentPacketSource + " " + currentPacketDestination + " " + connectionNumber + " " + connectionDuration);
+			connections.put(currentPacketEndTime, "E " + currentPacketSource + " " + currentPacketDestination + " " + connectionNumber + " " + connectionDuration);
 			connectionNumber++;
 			//System.out.println(connections.firstEntry());
 			//connections.remove(connections.firstEntry().getKey());
