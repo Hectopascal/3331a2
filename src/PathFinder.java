@@ -17,24 +17,24 @@ public class PathFinder {
 		
 		return findPathSDP(g, source, dest); //SDP
 	}
-	public HashMap<String,String> findPathSHP(Graph g, String source, String dest){
+	public HashMap<String,String> findPathSHP(Graph g, String sourceNode, String destNode){
 		HashMap<String,Integer> nodeCosts = new HashMap<String,Integer>();
 		HashMap<String, String> prevNode = new HashMap<String,String>();
 		HashMap<String, ArrayList<Link>> nodeList = new HashMap<String,ArrayList<Link>>(g.getNodes());
 		
 		//put in first node
-		nodeCosts.put(source, 0);
-		prevNode.put(source, null);
+		nodeCosts.put(sourceNode, 0);
+		prevNode.put(sourceNode, null);
 		
 		while (!nodeList.isEmpty()) {
 			//get minimum cost node from the list
 			//System.out.println("source is " + source);
-			 String cur = getMinimum(nodeList, nodeCosts);
+			 String curNode = getMinimum(nodeList, nodeCosts);
 			 
 			 //get neighbours
-			 LinkedList<Link> neighbours = new LinkedList<Link>(nodeList.get(cur));
+			 LinkedList<Link> neighbours = new LinkedList<Link>(nodeList.get(curNode));
 			 //System.out.println("amount of neighbours is " + neighbours.size());
-			 nodeList.remove(cur);
+			 nodeList.remove(curNode);
 			 
 			 //get update distance/cost for each neighbour
 			 while (!neighbours.isEmpty()) {
@@ -44,21 +44,21 @@ public class PathFinder {
 					 System.out.println("NOT AVAILABLE");
 					 continue;
 				 }
-				 String neighbourNode = n.otherEnd(cur);
+				 String neighbourNode = n.otherEnd(curNode);
 				 
 				 if (nodeCosts.containsKey(neighbourNode)) {
 					 //check if this new path has less cost, if yes, add.
-					 if (nodeCosts.get(neighbourNode) > nodeCosts.get(cur) + 1) {
+					 if (nodeCosts.get(neighbourNode) > nodeCosts.get(curNode) + 1) {
 						 
-						 nodeCosts.put(neighbourNode, nodeCosts.get(cur) + 1);
-						 prevNode.put(neighbourNode, cur);
+						 nodeCosts.put(neighbourNode, nodeCosts.get(curNode) + 1);
+						 prevNode.put(neighbourNode, curNode);
 					 } else {
 						 //System.out.println("doesnt cost less");
 					 }
 				 } else {
 					 //make new entry and update cost
-					 nodeCosts.put(neighbourNode, nodeCosts.get(cur) + 1);
-					 prevNode.put(neighbourNode, cur);
+					 nodeCosts.put(neighbourNode, nodeCosts.get(curNode) + 1);
+					 prevNode.put(neighbourNode, curNode);
 				 }
 				 
 			 }
@@ -68,29 +68,29 @@ public class PathFinder {
 		//printPath(prevNode,dest);
 		return prevNode;
 	}
-	public HashMap<String,String> findPathSDP(Graph g, String source, String dest) {
+	public HashMap<String,String> findPathSDP(Graph g, String sourceNode, String destNode) {
 		HashMap<String,Integer> nodeCosts = new HashMap<String,Integer>();
 		HashMap<String, String> prevNode = new HashMap<String,String>();
 		HashMap<String, ArrayList<Link>> nodeList = new HashMap<String,ArrayList<Link>>(g.getNodes());
 		
 		//put in first node
-		nodeCosts.put(source, 0);
-		prevNode.put(source, null);
+		nodeCosts.put(sourceNode, 0);
+		prevNode.put(sourceNode, null);
 		
 		while (!nodeList.isEmpty()) {
 			//get minimum cost node from the list
 			//System.out.println("source is " + source);
-			 String cur = getMinimum(nodeList, nodeCosts);
+			 String curNode = getMinimum(nodeList, nodeCosts);
 			 
-			 if(cur == null) {
+			 if(curNode == null) {
 				 System.out.println("NO available nodes left");
 				 return prevNode; //couldn't find anything else. No path!
 			 }
 			 
 			 //get neighbours
-			 LinkedList<Link> neighbours = new LinkedList<Link>(nodeList.get(cur));
+			 LinkedList<Link> neighbours = new LinkedList<Link>(nodeList.get(curNode));
 			 //System.out.println("amount of neighbours is " + neighbours.size());
-			 nodeList.remove(cur);
+			 nodeList.remove(curNode);
 			 
 			 //get update distance/cost for each neighbour
 			 while (!neighbours.isEmpty()) {
@@ -100,31 +100,31 @@ public class PathFinder {
 					 //System.out.println("NOT AVAILABLE");
 					 continue;
 				 }
-				 String neighbourNode = n.otherEnd(cur);
+				 String neighbourNode = n.otherEnd(curNode);
 				 //System.out.println("neighbour is " + neighbourNode);
 				 
 				 //if hashmap already has this neighbour
 				 if (nodeCosts.containsKey(neighbourNode)) {
 					 //check if this new path has less cost, if yes, add.
-					 if (nodeCosts.get(neighbourNode) > nodeCosts.get(cur) + n.getDelay()) {
+					 if (nodeCosts.get(neighbourNode) > nodeCosts.get(curNode) + n.getDelay()) {
 						 //System.out.println("cost less, adding " + neighbourNode);
-						 nodeCosts.put(neighbourNode, nodeCosts.get(cur) + n.getDelay());
-						 prevNode.put(neighbourNode, cur);
+						 nodeCosts.put(neighbourNode, nodeCosts.get(curNode) + n.getDelay());
+						 prevNode.put(neighbourNode, curNode);
 					 } else {
 						 //System.out.println("doesnt cost less");
 					 }
 				 } else {
 					 //System.out.println("doesnt already have this neighbour, adding " + neighbourNode);
 					 //make new entry and update cost
-					 nodeCosts.put(neighbourNode, nodeCosts.get(cur) + n.getDelay());
-					 prevNode.put(neighbourNode, cur);
+					 nodeCosts.put(neighbourNode, nodeCosts.get(curNode) + n.getDelay());
+					 prevNode.put(neighbourNode, curNode);
 				 }
 				 
 			 }
 		}
 		
 		System.out.println("found");
-		printPath(prevNode,dest);
+		printPath(prevNode,destNode);
 		return prevNode;
 	}
 	

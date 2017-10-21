@@ -1,20 +1,16 @@
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 import java.util.Scanner;
 import java.util.Stack;
 import java.util.TreeMap;
 
-
 public class RoutingPerformance {
-	
 	String networkScheme;
 	String routingScheme;
+	String topology;
+	String workload;
 	
 	int totalConnections;
 	int successfulConnections;
@@ -22,30 +18,28 @@ public class RoutingPerformance {
 	int failedConnections;
 	float percentageFailed;
 	
-	int packetRate;
-	
 	ArrayList <Integer> allHops = new ArrayList<Integer>();
 	float averageHops;
-	
 	ArrayList<Float> allDelay = new ArrayList<Float>();
 	float averageDelay; 
 	
 	TreeMap<Float,String> connections;
 	HashMap<String, Stack<String>> activePaths = new HashMap<String,Stack<String>>();
 	Graph g;
+	int packetRate;
 	
 	public static void main(String[] args) throws FileNotFoundException {
 		RoutingPerformance rp = new RoutingPerformance();
 		rp.networkScheme = args[0];
 		rp.routingScheme = args[1];
-		String topologyFile = args[2];
-		String workloadFile = args[3];
+		rp.topology = args[2];
+		rp.workload = args[3];
 		rp.packetRate = Integer.parseInt(args[4]);
-		String[] workloadFileArray = workloadFile.split("\n");
-		rp.connections = rp.addConnections(workloadFile);
+		rp.connections = rp.addConnections(rp.workload);
 		
-		 rp.g = new Graph(topologyFile);
-
+		rp.g = new Graph(rp.topology);
+		PathFinder pf = new PathFinder();
+		
 		/* 3 algorithms to implement (Dijkstra's):
 		*
 		*1. least number of hops (take cost of edge to be = 1)
@@ -54,8 +48,6 @@ public class RoutingPerformance {
 		*3. least loaded (pick route where the 'narrowest' link that can accommodate highest capacity)
 		*/
 		
-		PathFinder pf = new PathFinder();
-		
 		String currentNode = "A";
 		String destinationNode = "A";
 		
@@ -63,7 +55,7 @@ public class RoutingPerformance {
 		
 		while (!rp.connections.isEmpty()) {//while there are still connections to be routed
 			packetInfo = rp.connections.firstEntry().getValue().split(" ");
-			//System.out.println(packetInfo[0]);
+			//Format of connections = "S nodeA nodeB connectionnumber duration"
 			if (packetInfo[0].equals("S")) {
 				//if connection is add, get the path from pathfinder
 				currentNode = packetInfo[1];
@@ -99,10 +91,9 @@ public class RoutingPerformance {
 				}
 				
 				rp.updateCapacities(s, destinationNode,currentNode,rp.connections.firstEntry().getValue().split(" ",2)[1]);
-				
 			} else if(packetInfo[0].equals("E")){
 				Stack<String> stk = rp.activePaths.get(rp.connections.firstEntry().getValue().split(" ",2)[1]);
-				if(stk!=null) {
+				if(stk != null) {
 					String curNode = stk.pop();
 					while(!stk.isEmpty()) {
 						rp.g.getLink(curNode, stk.peek()).decreaseLink();
@@ -111,9 +102,10 @@ public class RoutingPerformance {
 					rp.activePaths.remove(rp.connections.firstEntry().getValue().split(" ",2)[1]);
 				}
 			} else {
-				System.out.println("lahblah");
+				System.out.println("NANI!?");
 			}
 			rp.connections.remove(rp.connections.firstEntry().getKey());		}	
+		
 		
 		///////////////////////LOG//////////////////////////////////////////////////
 		rp.averageHops = rp.getAverageHops(rp.allHops);
@@ -130,29 +122,29 @@ public class RoutingPerformance {
 	}	
 	
 	
-	public void updateCapacities (HashMap<String, String> s, String dest,String source, String key) {
-		String curNode = dest;  
-		while (s.get(curNode)!=null) { 
+	public void updateCapacities (HashMap<String, String> s, String destinationNode,String sourceNode, String key) {
+		String currentNode = destinationNode;  
+		while (s.get(currentNode)!=null) { 
 			//System.out.println(curNode + " "+ source);
-			curNode = s.get(curNode);
+			currentNode = s.get(currentNode);
 		}
-		System.out.println(curNode + " "+ source);
-		if(!curNode.equals(source)) {
+		System.out.println(currentNode + " "+ sourceNode);
+		if(!currentNode.equals(sourceNode)) {
 			//no path!!!!
 			//System.out.println("NOPATH cur is "+curNode + " source is "+source);
 			return;
 		}
 		
-		curNode= dest;
+		currentNode= destinationNode;
 		HashMap<String, ArrayList<Link>> nodes = this.g.getNodes();
-		Stack<String> st = new Stack<String>();
-		st.push(curNode);
-		while (s.get(curNode)!=null) {  
-			g.getLink(curNode, s.get(curNode)).increaseLink();
-			curNode = s.get(curNode);
-			st.push(curNode);
+		Stack<String> tempStringStack = new Stack<String>();
+		tempStringStack.push(currentNode);
+		while (s.get(currentNode)!=null) {  
+			g.getLink(currentNode, s.get(currentNode)).increaseLink();
+			currentNode = s.get(currentNode);
+			tempStringStack.push(currentNode);
 		}
-		activePaths.put(key, st); 
+		activePaths.put(key, tempStringStack); 
 		
 	}
 	
@@ -162,27 +154,24 @@ public class RoutingPerformance {
 	public TreeMap<Float, String> addConnections (String workloadFile) throws FileNotFoundException {
 		Scanner sc = new Scanner(new File(workloadFile));
 		int connectionNumber = 0;
-		String currentPacket;
-		float currentPacketTime;
-		String currentPacketSource;
-		String currentPacketDestination;
-		float currentPacketLength;
-		float currentPacketEndTime;
+		String currentConnection;
+		float currentConnectionTime;
+		String currentConnectionSource;
+		String currentConnectionDestination;
+		float currentConnectionDuration;
+		float currentConnectionEndTime;
 		TreeMap<Float,String> connections = new TreeMap<Float,String>();  
 		
-		while (connectionNumber < 10) {
-			currentPacket = sc.nextLine();
-			//System.out.println("currentpacket is " + currentPacket);
-			currentPacketTime = Float.parseFloat((currentPacket.split(" "))[0]);
-			currentPacketSource = (currentPacket.split(" "))[1];
-			currentPacketDestination = (currentPacket.split(" "))[2];
-			currentPacketLength = Float.parseFloat((currentPacket.split(" "))[3]);
-			currentPacketEndTime = currentPacketLength + currentPacketTime;
-			connections.put(currentPacketTime, "S " + currentPacketSource + " " + currentPacketDestination + " " + connectionNumber + " " + currentPacketLength);
-			connections.put(currentPacketEndTime, "E " + currentPacketSource + " " + currentPacketDestination + " " + connectionNumber + " " + currentPacketLength);
+		while (sc.hasNextLine()) {
+			currentConnection = sc.nextLine();
+			currentConnectionTime = Float.parseFloat((currentConnection.split(" "))[0]);
+			currentConnectionSource = (currentConnection.split(" "))[1];
+			currentConnectionDestination = (currentConnection.split(" "))[2];
+			currentConnectionDuration = Float.parseFloat((currentConnection.split(" "))[3]);
+			currentConnectionEndTime = currentConnectionDuration + currentConnectionTime;
+			connections.put(currentConnectionTime, "S " + currentConnectionSource + " " + currentConnectionDestination + " " + connectionNumber + " " + currentConnectionDuration);
+			connections.put(currentConnectionEndTime, "E " + currentConnectionSource + " " + currentConnectionDestination + " " + connectionNumber + " " + currentConnectionDuration);
 			connectionNumber++;
-			//System.out.println(connections.firstEntry());
-			//connections.remove(connections.firstEntry().getKey());
 		}
 		return connections;
 		
@@ -193,9 +182,7 @@ public class RoutingPerformance {
 		for (Integer hop : hops) {
 			averageHops = averageHops + hop;
 		}
-		//System.out.println("HOPS1 HOPS HOPS ARE " + averageHops + " " + hops.size());
 		averageHops = averageHops / hops.size();
-		//System.out.println("HOPS HOPS HOPS ARE " + averageHops);
 		return averageHops;
 		
 	}
@@ -205,9 +192,7 @@ public class RoutingPerformance {
 		for (Float hop : delays) {
 			averageDelay = averageDelay + hop;
 		}
-		//System.out.println("HOPS1 HOPS HOPS ARE " + averageHops + " " + hops.size());
 		averageDelay = averageDelay / delays.size();
-		//System.out.println("HOPS HOPS HOPS ARE " + averageHops);
 		return averageDelay;
 	}
 }
