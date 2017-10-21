@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.Stack;
 import java.util.TreeMap;
@@ -14,11 +15,21 @@ public class RoutingPerformance {
 	
 	String networkScheme;
 	String routingScheme;
+	
 	int totalConnections;
 	int successfulConnections;
+	float percentageSuccess;
 	int failedConnections;
+	float percentageFailed;
+	
 	int packetRate;
+	
 	ArrayList <Integer> allHops = new ArrayList<Integer>();
+	float averageHops;
+	
+	ArrayList<Float> allDelay = new ArrayList<Float>();
+	float averageDelay; 
+	
 	TreeMap<Float,String> connections;
 	HashMap<String, Stack<String>> activePaths = new HashMap<String,Stack<String>>();
 	Graph g;
@@ -63,15 +74,20 @@ public class RoutingPerformance {
 				//Calculate and update capacities
 				HashMap<String, String> s = pf.findPath(rp.g, currentNode, destinationNode, rp.routingScheme);
 				
-				//Adding number of hops into an arraylist
-				String key = destinationNode;
+				//Adding number of hops into arraylist
+				//Adding delay of this path into arraylist
+				String nodeA = destinationNode;
+				String nodeB = nodeA;
 				int hops = 0;
-				while(s.get(key) != null) {
+				float delay = 0;
+				while(s.get(nodeA) != null) {
 					hops++;
-					key = s.get(key);
+					nodeA = s.get(nodeA);
+					delay = delay + rp.g.getLink(nodeA, nodeB).getDelay();
+					nodeB = nodeA;
 				}
 				rp.allHops.add(hops);
-				System.out.println("average hop is " + rp.allHops.get(rp.allHops.size() - 1));
+				rp.allDelay.add(delay);
 				
 				//Updating the total number of connections
 				rp.totalConnections++;
@@ -100,11 +116,17 @@ public class RoutingPerformance {
 			rp.connections.remove(rp.connections.firstEntry().getKey());		}	
 		
 		///////////////////////LOG//////////////////////////////////////////////////
-		float averageHops = rp.getAverageHops(rp.allHops);
+		rp.averageHops = rp.getAverageHops(rp.allHops);
+		rp.averageDelay = rp.getAverageDelay(rp.allDelay);
+		rp.percentageSuccess = (float)rp.successfulConnections / (float)rp.totalConnections;
+		rp.percentageFailed = (float)rp.failedConnections / (float)rp.totalConnections;
 		System.out.println("Total number of connections: " + rp.totalConnections);
 		System.out.println("Number of sucessful routed connections: " + rp.successfulConnections);
+		System.out.println("Percentage of successful routed connections: " + rp.percentageSuccess);
+		System.out.println("Percentage of failed connections: " + rp.percentageFailed);
 		System.out.println("Number of failed connections: " + rp.failedConnections);
-		System.out.println("Average number of hops are: " + averageHops);
+		System.out.println("Average number of hops are: " + rp.averageHops);
+		System.out.println("Average cumulative propagation delay per circuit: " + rp.averageDelay + "ms");
 	}	
 	
 	
@@ -148,7 +170,7 @@ public class RoutingPerformance {
 		float currentPacketEndTime;
 		TreeMap<Float,String> connections = new TreeMap<Float,String>();  
 		
-		while (sc.hasNextLine()) {
+		while (connectionNumber < 10) {
 			currentPacket = sc.nextLine();
 			//System.out.println("currentpacket is " + currentPacket);
 			currentPacketTime = Float.parseFloat((currentPacket.split(" "))[0]);
@@ -176,5 +198,16 @@ public class RoutingPerformance {
 		//System.out.println("HOPS HOPS HOPS ARE " + averageHops);
 		return averageHops;
 		
+	}
+	
+	public float getAverageDelay (ArrayList<Float> delays) {
+		float averageDelay = 0;
+		for (Float hop : delays) {
+			averageDelay = averageDelay + hop;
+		}
+		//System.out.println("HOPS1 HOPS HOPS ARE " + averageHops + " " + hops.size());
+		averageDelay = averageDelay / delays.size();
+		//System.out.println("HOPS HOPS HOPS ARE " + averageHops);
+		return averageDelay;
 	}
 }
