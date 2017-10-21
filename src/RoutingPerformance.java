@@ -11,20 +11,25 @@ import java.util.TreeMap;
 
 
 public class RoutingPerformance {
+	
 	String networkScheme;
 	String routingScheme;
 	int totalConnections;
+	int successfulConnections;
+	int failedConnections;
 	int packetRate;
+	ArrayList <Integer> allHops = new ArrayList<Integer>();
 	TreeMap<Float,String> connections;
 	HashMap<String, Stack<String>> activePaths = new HashMap<String,Stack<String>>();
 	Graph g;
+	
 	public static void main(String[] args) throws FileNotFoundException {
 		RoutingPerformance rp = new RoutingPerformance();
 		rp.networkScheme = args[0];
 		rp.routingScheme = args[1];
 		String topologyFile = args[2];
 		String workloadFile = args[3];
-		
+		rp.packetRate = Integer.parseInt(args[4]);
 		String[] workloadFileArray = workloadFile.split("\n");
 		rp.connections = rp.addConnections(workloadFile);
 		
@@ -44,27 +49,42 @@ public class RoutingPerformance {
 		String destinationNode = "A";
 		
 		String[] packetInfo = rp.connections.firstEntry().getValue().split(" ");
-		//ArrayList<String> path = new ArrayList<String>();
-		int i = 0;
+		
 		while (!rp.connections.isEmpty()) {//while there are still connections to be routed
 			packetInfo = rp.connections.firstEntry().getValue().split(" ");
-			System.out.println(packetInfo[0]);
+			//System.out.println(packetInfo[0]);
 			if (packetInfo[0].equals("S")) {
-				
-				//if connection is add {
-				//get the route from algo
+				//if connection is add, get the path from pathfinder
 				currentNode = packetInfo[1];
-				System.out.println("current is " + currentNode);
+				//System.out.println("current is " + currentNode);
 				destinationNode = packetInfo[2];
-				System.out.println("destination is " + destinationNode);
+				//System.out.println("destination is " + destinationNode);
 
 				//Calculate and update capacities
 				HashMap<String, String> s = pf.findPath(rp.g, currentNode, destinationNode, rp.routingScheme);
+				
+				//Adding number of hops into an arraylist
+				String key = destinationNode;
+				int hops = 0;
+				while(s.get(key) != null) {
+					hops++;
+					key = s.get(key);
+				}
+				rp.allHops.add(hops);
+				System.out.println("average hop is " + rp.allHops.get(rp.allHops.size() - 1));
+				
+				//Updating the total number of connections
 				rp.totalConnections++;
+				
+				if (true) { //////////////////////////need to determine whether the connection failed or not
+					rp.successfulConnections++;
+				} else {
+					rp.failedConnections++;
+				}
+				
 				rp.updateCapacities(s, destinationNode,currentNode,rp.connections.firstEntry().getValue().split(" ",2)[1]);
 				
 			} else if(packetInfo[0].equals("E")){
-				
 				Stack<String> stk = rp.activePaths.get(rp.connections.firstEntry().getValue().split(" ",2)[1]);
 				if(stk!=null) {
 					String curNode = stk.pop();
@@ -74,36 +94,30 @@ public class RoutingPerformance {
 					}
 					rp.activePaths.remove(rp.connections.firstEntry().getValue().split(" ",2)[1]);
 				}
-				
-				
-			}else {
+			} else {
 				System.out.println("lahblah");
-				i++;
 			}
-			//update the map, add route onto another treemap
-			//update statistics		
-			rp.connections.remove(rp.connections.firstEntry().getKey());
-			//else if the connection is end
-			//update the map, delete route from treemap
-		}	
+			rp.connections.remove(rp.connections.firstEntry().getKey());		}	
 		
 		///////////////////////LOG//////////////////////////////////////////////////
-		int numberOfConnections = workloadFileArray.length;
-		System.out.println("DONE" + rp.totalConnections);
-		System.out.println(i);
+		float averageHops = rp.getAverageHops(rp.allHops);
+		System.out.println("Total number of connections: " + rp.totalConnections);
+		System.out.println("Number of sucessful routed connections: " + rp.successfulConnections);
+		System.out.println("Number of failed connections: " + rp.failedConnections);
+		System.out.println("Average number of hops are: " + averageHops);
 	}	
 	
 	
-	public void updateCapacities(HashMap<String, String> s, String dest,String source, String key) {
+	public void updateCapacities (HashMap<String, String> s, String dest,String source, String key) {
 		String curNode = dest;  
 		while (s.get(curNode)!=null) { 
-			System.out.println(curNode + " "+ source);
+			//System.out.println(curNode + " "+ source);
 			curNode = s.get(curNode);
 		}
 		System.out.println(curNode + " "+ source);
 		if(!curNode.equals(source)) {
 			//no path!!!!
-			System.out.println("NOPATH cur is "+curNode + " source is "+source);
+			//System.out.println("NOPATH cur is "+curNode + " source is "+source);
 			return;
 		}
 		
@@ -123,7 +137,7 @@ public class RoutingPerformance {
 		
 
 	
-	public TreeMap<Float, String> addConnections(String workloadFile) throws FileNotFoundException {
+	public TreeMap<Float, String> addConnections (String workloadFile) throws FileNotFoundException {
 		Scanner sc = new Scanner(new File(workloadFile));
 		int connectionNumber = 0;
 		String currentPacket;
@@ -142,13 +156,25 @@ public class RoutingPerformance {
 			currentPacketDestination = (currentPacket.split(" "))[2];
 			currentPacketLength = Float.parseFloat((currentPacket.split(" "))[3]);
 			currentPacketEndTime = currentPacketLength + currentPacketTime;
-			connections.put(currentPacketTime, "S " + currentPacketSource + " " + currentPacketDestination + " " + connectionNumber);
-			connections.put(currentPacketEndTime, "E " + currentPacketSource + " " + currentPacketDestination + " " + connectionNumber);
+			connections.put(currentPacketTime, "S " + currentPacketSource + " " + currentPacketDestination + " " + connectionNumber + " " + currentPacketLength);
+			connections.put(currentPacketEndTime, "E " + currentPacketSource + " " + currentPacketDestination + " " + connectionNumber + " " + currentPacketLength);
 			connectionNumber++;
 			//System.out.println(connections.firstEntry());
 			//connections.remove(connections.firstEntry().getKey());
 		}
 		return connections;
+		
+	}
+	
+	public float getAverageHops (ArrayList<Integer> hops) {
+		float averageHops = 0;
+		for (Integer hop : hops) {
+			averageHops = averageHops + hop;
+		}
+		//System.out.println("HOPS1 HOPS HOPS ARE " + averageHops + " " + hops.size());
+		averageHops = averageHops / hops.size();
+		//System.out.println("HOPS HOPS HOPS ARE " + averageHops);
+		return averageHops;
 		
 	}
 }

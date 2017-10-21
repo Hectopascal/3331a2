@@ -65,7 +65,7 @@ public class PathFinder {
 		}
 		
 		System.out.println("found");
-		printPath(prevNode,dest);
+		//printPath(prevNode,dest);
 		return prevNode;
 	}
 	public HashMap<String,String> findPathSDP(Graph g, String source, String dest) {
