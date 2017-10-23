@@ -1,24 +1,35 @@
+import java.util.HashMap;
 
-public class State  implements Comparable<State>{
-	public int cost;
-	public String current;
-	public State prev;
+public class State implements Comparable<State>{
+
+	public double highest;
+	public String node;
+	public State previous;
 	
-	
-	public State(int cost, String current,State prev) {
+	/**
+	 * 
+	 * @param cost
+	 * @param current
+	 * @param previous
+	 */
+	public State(double cost, String current, State previous) {
 		super();
-		this.cost = cost;
-		this.current = current;
-		this.prev = prev;
+		this.highest = cost;
+		this.node = current;
+		this.previous = previous;
 	}
+	
+	
 
 	@Override
-	public boolean equals(Object object2) {
-		State s = (State) object2;
-	    return (current==s.current);
+	public int compareTo(State s) {
+		//if(this.lowest == s.lowest && this.node!=s.node) return -1;
+		
+		if(this.highest-s.highest >0) return 1;
+		if(this.highest-s.highest <0) return -1; 
+		
+		return 0;
 	}
-	@Override
-	public int compareTo(State o) {
-		return this.cost - o.cost;
-	}
+
+
 }

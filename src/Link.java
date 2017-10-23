@@ -14,8 +14,12 @@ public class Link {
 		this.end2 = end2;
 		this.currentLinks = currentLinks;
 	}
+	public double ratio() {
+		return (double)currentLinks/(double)capacity;
+	}
+	
 	public boolean isAvailable() {
-		//System.out.println(end1 + " "+ end2+" Capacity is "+ capacity + "available "+(capacity-currentLinks));
+		System.out.println(end1 + " "+ end2+" Capacity is "+ capacity + "available "+(capacity-currentLinks));
 		return (capacity - currentLinks) > 0;
 	}
 	/**

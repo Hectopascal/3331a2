@@ -72,7 +72,7 @@ public class RoutingPerformance {
 				String nodeB = nodeA;
 				int hops = 0;
 				float delay = 0;
-				while(s.get(nodeA) != null) {
+				while(s!= null &&s.get(nodeA) != null) {
 					hops++;
 					nodeA = s.get(nodeA);
 					delay = delay + rp.g.getLink(nodeA, nodeB).getDelay();
@@ -83,12 +83,7 @@ public class RoutingPerformance {
 				
 				//Updating the total number of connections
 				rp.totalConnections++;
-				
-				if (true) { //////////////////////////need to determine whether the connection failed or not
-					rp.successfulConnections++;
-				} else {
-					rp.failedConnections++;
-				}
+			
 				
 				rp.updateCapacities(s, destinationNode,currentNode,rp.connections.firstEntry().getValue().split(" ",2)[1]);
 			} else if(packetInfo[0].equals("E")){
@@ -123,23 +118,30 @@ public class RoutingPerformance {
 	
 	
 	public void updateCapacities (HashMap<String, String> s, String destinationNode,String sourceNode, String key) {
-		String currentNode = destinationNode;  
-		while (s.get(currentNode)!=null) { 
-			//System.out.println(curNode + " "+ source);
+		String currentNode = destinationNode; 
+		if(s==null) {
+			failedConnections++;
+			return;
+		}
+		while (s!= null && s.get(currentNode)!=null) { 
+			System.out.println(currentNode + " "+ sourceNode);
 			currentNode = s.get(currentNode);
 		}
 		System.out.println(currentNode + " "+ sourceNode);
+		
+		
 		if(!currentNode.equals(sourceNode)) {
-			//no path!!!!
 			//System.out.println("NOPATH cur is "+curNode + " source is "+source);
+			failedConnections++;
 			return;
 		}
-		
+		successfulConnections++;
 		currentNode= destinationNode;
 		HashMap<String, ArrayList<Link>> nodes = this.g.getNodes();
 		Stack<String> tempStringStack = new Stack<String>();
 		tempStringStack.push(currentNode);
 		while (s.get(currentNode)!=null) {  
+			System.out.println(currentNode+"    "+s.get(currentNode));
 			g.getLink(currentNode, s.get(currentNode)).increaseLink();
 			currentNode = s.get(currentNode);
 			tempStringStack.push(currentNode);

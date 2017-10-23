@@ -39,7 +39,9 @@ public class Graph {
 		return links;
 	}
 	public Link getLink(String a, String b) {
+
 		ArrayList<Link> links =  nodeList.get(a);
+
 		for(Link l : links) {
 			if(l.isEdgeBetween(a, b)) return l;
 		}
@@ -51,7 +53,7 @@ public class Graph {
 	public void printGraph() {
 		for(String node : nodeList.keySet()) {
 			ArrayList<Link> links = nodeList.get(node);
-			//System.out.println("Links on Node "+node+":");
+			System.out.println("Links on Node "+node+":");
 			for(Link l : links) {
 				l.printLink();
 			}
